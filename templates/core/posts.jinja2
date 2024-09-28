@@ -1,9 +1,9 @@
 {% extends "templates/core/base.jinja2" %}
+{% block css_framework %}
+<link rel="stylesheet" href="../assets/css/pico.min.css">
+{% endblock css_framework %}
 {% block body %}
 {% block article %}
-<h1>{{ post.title }}</h1>
-<small>{{ post.tags }}</small>
-<hr/>
-<p>{{ post.body|safe }}</p>
+{{ post }}
 {% endblock article %}
 {% endblock body %}

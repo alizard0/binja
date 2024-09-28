@@ -1,15 +1,25 @@
 import json
 import os
 import shutil
+from mistune import html
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 env = Environment(
     loader=FileSystemLoader(""),
     autoescape=select_autoescape()
 )
 
+def render_markdown(markdown):
+    return html(markdown)
+
 def load_variables_from_json(filename):
     f = open(filename)     
     data = json.load(f)
+    f.close()
+    return data
+
+def load_markdown(filename):
+    f = open(filename)     
+    data = render_markdown(f.read())
     f.close()
     return data
 
@@ -54,10 +64,38 @@ def generate_sitemap(sitemap_data):
     path = "/Users/alizardo/Documents/superlanding-generator/output/"
     save_sitemap(path, page)
 
+def get_posts():
+    basepath = "data/posts"
+    get_posts = []
+    for entry in os.listdir(basepath):
+        if os.path.isfile(os.path.join(basepath, entry)):
+            get_posts.append({
+                "path": basepath + "/" + entry,
+                "name": entry.replace(".md", "")
+            })
+    return get_posts
+
+def generate_posts(template, posts, data):
+    for post in posts:
+        content = load_markdown(post["path"])
+        page = template.render(
+                post=content
+            )
+        path = create_dir(data["working_directory"], data["name"] + "/blog")
+        save_page(path, page, post["name"])
+
 def main():
     data = load_variables_from_json("data/blog.json")
+    if data["blog"]:
+        print("Generating blog entries")
+        posts = get_posts()
+        template = env.get_template("templates/core/posts.jinja2")
+        generate_posts(template, posts, data)
+
+    print("Generating index.html")    
     template = env.get_template("templates/core/index.jinja2")
     generate_website(template, data)
+
     
 if __name__ == "__main__":
     main()
