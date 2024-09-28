@@ -1,0 +1,13 @@
+{% extends ../core/base.jinja2 %}
+{% block body %}
+<h1>Hello, World!</h1>
+<p>This is the base template for Binja!</p>
+{% block blog %}
+<h2>Latest blog posts</h2>
+<ul>
+{% for post in posts %}
+<li><a href="{{ post.url }}">{{ post.title }}></li>
+{% endfor %}
+</ul>
+{% endblock blog %}
+{% endblock body %}

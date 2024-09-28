@@ -1,0 +1,9 @@
+{% extends base.jinja2 %}
+{% block body %}
+{% block article %}
+<h1>{{ post.title }}</h1>
+<small>{{ post.tags }}</small>
+<hr/>
+<p>{{ post.body|safe }}</p>
+{% endblock article %}
+{% endblock body %}
