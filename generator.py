@@ -41,27 +41,35 @@ def create_dir(working_directory, foldername):
     return newpath
 
 def generate_website(template, data):
+    print([data["blog"][i:i+3] for i in range(0, len(data["blog"]), 3)])
     page = template.render(
             title=data["title"], 
-            description=data["description"]
+            description=data["description"],
+            about_page=data["about_page"],
+            blog=True,
+            posts=[data["blog"][i:i+2] for i in range(0, len(data["blog"]), 2)]
         )
     path = create_dir(data["working_directory"], data["name"])
     save_page(path, page)
     copy_assets(path)
 
 def copy_assets(target):
-    src = "assets"
-    shutil.copytree(src, target + "/assets")
+    try:
+        src = "assets"
+        shutil.copytree(src, target + "/assets")
+    except:
+        print("Assets might have been copied already.")
 
+# todo
 def generate_sitemap(sitemap_data):
     template = env.get_template("template/sitemap.v1.j2")
     page = template.render(
-            website = "www.superlanding.page",
+            website = sitemap_data["name"],
             sitemap_data = sitemap_data,
             page_name = "index",
             gen_date = "2024-09-19"
         )
-    path = "/Users/alizardo/Documents/superlanding-generator/output/"
+    path = create_dir(sitemap_data["working_directory"], sitemap_data["name"])
     save_sitemap(path, page)
 
 def get_posts():
@@ -79,22 +87,40 @@ def generate_posts(template, posts, data):
     for post in posts:
         content = load_markdown(post["path"])
         page = template.render(
+                title=data["title"], 
+                description=data["description"],
+                about_page=data["about_page"],
+                blog=data["blog"],
                 post=content
             )
         path = create_dir(data["working_directory"], data["name"] + "/blog")
         save_page(path, page, post["name"])
 
+def generate_about(template, data):
+    page = template.render(
+            title=data["title"], 
+            description=data["description"],
+            about_page=data["about_page"],
+            about=load_markdown("data/about.md")
+        )
+    path = create_dir(data["working_directory"], data["name"])
+    save_page(path, page, filename = "about")
+
 def main():
     data = load_variables_from_json("data/blog.json")
-    if data["blog"]:
+    if data["blog"] is not None:
         print("Generating blog entries")
         posts = get_posts()
-        template = env.get_template("templates/core/posts.jinja2")
+        template = env.get_template("templates/minimal/posts.jinja2")
         generate_posts(template, posts, data)
 
     print("Generating index.html")    
-    template = env.get_template("templates/core/index.jinja2")
+    template = env.get_template("templates/minimal/index.jinja2")
     generate_website(template, data)
+
+    print("Generating about.html")
+    template = env.get_template("templates/minimal/about.jinja2")
+    generate_about(template, data)
 
     
 if __name__ == "__main__":

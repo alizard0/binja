@@ -3,6 +3,21 @@
 	"name":"andrelizardo.com",
 	"title":"André Lizardo",
 	"description":"Notes on software development and software architecture.",
-	"about_page": false,
-	"blog": true
+	"about_page": true,
+	"blog": [
+		{
+			"title": "Lorem Ipsum",
+			"description": "Coniugis pariter oraque mea reddat Pervenit legebat, subiecta vulgusque. His avertitur si vela volucris dabat",
+			"document": "hello-world",
+			"tags": ["Amazon", "Google"],
+			"created-at":"1 September 2024"
+		},
+		{
+			"title": "Lorem Ipsum Espanol",
+			"description": "Coniugis pariter oraque mea reddat Pervenit legebat, subiecta vulgusque. His avertitur si vela volucris dabat",
+			"document": "hola-mundo",
+			"tags": ["Amazon", "Google"],
+			"created-at":"1 September 2024"
+		}
+	]
 }

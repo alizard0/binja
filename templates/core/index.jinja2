@@ -1,6 +1,16 @@
 {% extends "templates/core/base.jinja2" %}
 {% block body %}
 <main class="container">
+	<nav>
+	  <ul>
+	    <li><a href="/"><strong>{{ title }}</strong></a></li>
+	  </ul>
+	  <ul>
+	  	{% if about_page %}
+	    <li><a href="#" class="contrast">About</a></li>
+	    {% endif %}
+	  </ul>
+	</nav>
 	<hgroup>
 		<h1>Hello, World!</h1>
 		<p>This is the base template for Binja!</p>
