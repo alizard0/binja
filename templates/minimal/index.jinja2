@@ -18,6 +18,16 @@ body {
 	padding-left: 5%;
 	padding-right: 5%;
 }
+
+kbd {
+	font-size: 10px;
+	color: #0F3888;
+	background-color: white;
+}
+
+img {
+	width: 50%;
+}
 </style>
 {% endblock assets_css %}
 {% block body %}
@@ -39,9 +49,9 @@ body {
 		{% for post in row %}
 			<article>
 				<hgroup>
-					<small>{% for tag in post.tags %}{{ tag }} {% endfor %}</small>
+					<p>{% for tag in post.tags %}<kbd>{{ tag }}</kbd> {% endfor %}</p>
 					<h2><a href="./blog/{{ post.document }}.html">{{ post.title }}</a></h2>
-					<p>{{ post.description }}
+					<p>{{ post.description }}</p>
 				</hgroup>
 			</article>
 		{% endfor %}
