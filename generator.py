@@ -2,15 +2,28 @@ import json
 import os
 import shutil
 from datetime import datetime
-from mistune import html
+import mistune
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import html
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+
 env = Environment(
     loader=FileSystemLoader(""),
     autoescape=select_autoescape()
 )
 
-def render_markdown(markdown):
-    return html(markdown)
+class HighlightRenderer(mistune.HTMLRenderer):
+    def block_code(self, code, info=None):
+        if info:
+            lexer = get_lexer_by_name(info, stripall=True)
+            formatter = html.HtmlFormatter(noclasses=True)
+            return highlight(code, lexer, formatter)
+        return '<pre><code>' + mistune.escape(code) + '</code></pre>'
+
+def render_markdown(text):
+    markdown = mistune.create_markdown(renderer=HighlightRenderer())
+    return markdown(text)
 
 def load_variables_from_json(filename):
     f = open(filename)     
