@@ -3,11 +3,11 @@
 <main class="container">
 	<nav>
 	  <ul>
-	    <li><a href="/"><strong>{{ title }}</strong></a></li>
+	    <li><a href="{{ website }}"><strong>{{ title }}</strong></a></li>
 	  </ul>
 	  <ul>
 	  	{% if about_page %}
-	    <li><a href="#" class="contrast">About</a></li>
+	    <li><a href="{{ website }}/about/index.html" class="contrast">About</a></li>
 	    {% endif %}
 	  </ul>
 	</nav>

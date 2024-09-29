@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% for page in pages %}
+  {% if page.type == 'blog' %}
+  <url>
+    <loc>https://{{ website }}/{{ page.type }}/{{ page.name }}.html</loc>
+    <lastmod>{{ gen_date }}</lastmod>
+  </url>
+  {% else %}
+  <url>
+    <loc>https://{{ website }}/{{ page.name }}.html</loc>
+    <lastmod>{{ gen_date }}</lastmod>
+  </url>
+  {% endif %}
+  {% endfor %}
+</urlset>

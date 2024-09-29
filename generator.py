@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+from datetime import datetime
 from mistune import html
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 env = Environment(
@@ -29,7 +30,7 @@ def save_page(path, data, filename = "index"):
     page.close()
 
 def save_sitemap(path, data):
-    page = open(path + "sitemap.xml", "w")
+    page = open(path + "/" + "sitemap.xml", "w")
     page.write(data)
     page.close
 
@@ -41,12 +42,12 @@ def create_dir(working_directory, foldername):
     return newpath
 
 def generate_website(template, data):
-    print([data["blog"][i:i+3] for i in range(0, len(data["blog"]), 3)])
     page = template.render(
             title=data["title"], 
             description=data["description"],
             about_page=data["about_page"],
             blog=True,
+            website=data["website"],
             posts=[data["blog"][i:i+2] for i in range(0, len(data["blog"]), 2)]
         )
     path = create_dir(data["working_directory"], data["name"])
@@ -60,18 +61,6 @@ def copy_assets(target):
     except:
         print("Assets might have been copied already.")
 
-# todo
-def generate_sitemap(sitemap_data):
-    template = env.get_template("template/sitemap.v1.j2")
-    page = template.render(
-            website = sitemap_data["name"],
-            sitemap_data = sitemap_data,
-            page_name = "index",
-            gen_date = "2024-09-19"
-        )
-    path = create_dir(sitemap_data["working_directory"], sitemap_data["name"])
-    save_sitemap(path, page)
-
 def get_posts():
     basepath = "data/posts"
     get_posts = []
@@ -83,6 +72,22 @@ def get_posts():
             })
     return get_posts
 
+def generate_sitemap(template, data):
+    if data["blog"] is not None:
+        print("Adding blog posts to sitemap")
+        for page in data["blog"]:
+            data["sitemap"].append({
+                    "name": page["document"],
+                    "type": "blog"
+                })
+    render = template.render(
+            website = data["name"],
+            pages = data["sitemap"],
+            gen_date = datetime.today().strftime('%Y-%m-%d')
+        )
+    path = create_dir(data["working_directory"], data["name"])
+    save_sitemap(path, render)
+
 def generate_posts(template, posts, data):
     for post in posts:
         content = load_markdown(post["path"])
@@ -91,6 +96,7 @@ def generate_posts(template, posts, data):
                 description=data["description"],
                 about_page=data["about_page"],
                 blog=data["blog"],
+                website=data["website"],
                 post=content
             )
         path = create_dir(data["working_directory"], data["name"] + "/blog")
@@ -101,6 +107,7 @@ def generate_about(template, data):
             title=data["title"], 
             description=data["description"],
             about_page=data["about_page"],
+            website=data["website"],
             about=load_markdown("data/about.md")
         )
     path = create_dir(data["working_directory"], data["name"])
@@ -111,16 +118,20 @@ def main():
     if data["blog"] is not None:
         print("Generating blog entries")
         posts = get_posts()
-        template = env.get_template("templates/minimal/posts.jinja2")
+        template = env.get_template("templates/" + data["template"] + "/posts.jinja2")
         generate_posts(template, posts, data)
 
     print("Generating index.html")    
-    template = env.get_template("templates/minimal/index.jinja2")
+    template = env.get_template("templates/" + data["template"] + "/index.jinja2")
     generate_website(template, data)
 
     print("Generating about.html")
-    template = env.get_template("templates/minimal/about.jinja2")
+    template = env.get_template("templates/" + data["template"] + "/about.jinja2")
     generate_about(template, data)
+
+    print("Generating sitemap.xml")
+    template = env.get_template("templates/" + data["template"] + "/sitemap.jinja2")
+    generate_sitemap(template, data)
 
     
 if __name__ == "__main__":

@@ -1,21 +1,38 @@
 {% extends  "templates/core/base.jinja2" %}
+{% block assets_css %}
+{{ super() }}
+<style>
+h1 {
+	color: #0F3888;
+}
+
+h2, h3 {
+	color: #5C7EF8;
+}
+
+a {
+	text-decoration: none;
+}
+
+body {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+</style>
+{% endblock assets_css %}
 {% block body %}
 <main class="container">
 	<nav>
 	  <ul>
-	    <li><a href="./index.html"><strong>{{ title }}</strong></a></li>
+	    <li><a href="{{ website }}"><strong>{{ title }}</strong></a></li>
 	  </ul>
 	  <ul>
 	  	{% if about_page %}
-	    <li><a href="./about.html" class="contrast">About</a></li>
+	    <li><a href="{{ website }}/about.html" class="contrast">About</a></li>
 	    {% endif %}
 	  </ul>
 	</nav>
 	{% block content %}
-	<hgroup>
-		<h1>Hello, World!</h1>
-		<p>This is the base template for Binja!</p>
-	</hgroup>
 	{% if blog %}
 	{% for row in posts %}
 		<div class="grid">
