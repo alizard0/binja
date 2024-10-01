@@ -61,7 +61,8 @@ def generate_website(template, data):
             about_page=data["about_page"],
             blog=True,
             website=data["website"],
-            posts=[data["blog"][i:i+2] for i in range(0, len(data["blog"]), 2)]
+            posts=[data["blog"][i:i+2] for i in range(0, len(data["blog"]), 2)],
+            gtag=data["gtag"]
         )
     path = create_dir(data["working_directory"], data["name"])
     save_page(path, page)
@@ -110,7 +111,8 @@ def generate_posts(template, posts, data):
                 about_page=data["about_page"],
                 blog=data["blog"],
                 website=data["website"],
-                post=content
+                post=content,
+                gtag=data["gtag"]
             )
         path = create_dir(data["working_directory"], data["name"] + "/blog")
         save_page(path, page, post["name"])
@@ -121,7 +123,8 @@ def generate_about(template, data):
             description=data["description"],
             about_page=data["about_page"],
             website=data["website"],
-            about=load_markdown("data/about.md")
+            about=load_markdown("data/about.md"),
+            gtag=data["gtag"]
         )
     path = create_dir(data["working_directory"], data["name"])
     save_page(path, page, filename = "about")

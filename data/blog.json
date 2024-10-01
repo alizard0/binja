@@ -31,5 +31,6 @@
 			"name": "about",
 			"type": "base"
 		}
-	]
+	],
+	"gtag": "xxxx"
 }
