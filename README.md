@@ -1,4 +1,4 @@
-# Jinja2 + Blog = BINJA
+# Blog + Jinja2 = BINJA
 > Binja is a static blog generator made with Jinja2 & Python.
 
 ## Install
